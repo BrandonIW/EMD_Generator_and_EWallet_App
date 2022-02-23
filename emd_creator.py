@@ -1,15 +1,19 @@
 import hashlib
+import logging
 import pyfiglet
+import os
 import re
 import termcolor
 
 from Crypto.Cipher import AES
+from logging.handlers import RotatingFileHandler
 from time import sleep
 
 
 def main():
+    logger = _build_logger()
     ascii_title = pyfiglet.figlet_format("EMD Token Generator", font="standard")
-    print(termcolor.colored(ascii_title, color='blue'))
+    print(termcolor.colored(ascii_title, color='green'))
 
     while True:
         dollar_hex = _dollar_to_32bithex(input("Input Dollar Amount to Create an EMD HEX Token: "))
@@ -17,6 +21,7 @@ def main():
         emd_token = _create_emd(dollar_hex, wallet_key_hex)
 
         print(f"Your EMD Token is: {emd_token}")
+        logger.info(f"EMD Token {emd_token} || Dollar Hex {dollar_hex} || Wallet Key Hex {wallet_key_hex}")
         sleep(2)
 
         if not _continue():
@@ -84,6 +89,33 @@ def _check_positive(num):
         return False
     return ivalue
 
+def _decrypt_emd(emd_token_hex, wallet_key_hex):
+    wallet_key_bytes = bytes.fromhex(wallet_key_hex)
+    emd_in_bytes = bytes.fromhex(emd_token_hex)
+
+    cipher = AES.new(wallet_key_bytes, AES.MODE_ECB)
+    plaintext = cipher.decrypt(emd_in_bytes)
+
+    print(f"Plaintext Bytes = {plaintext} | Plaintext Hex = {plaintext.hex()} | "
+          f"Plaintext Decimal = {int(plaintext.hex(), 16)}")
+
+def _build_logger():
+    directory = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(directory)
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    file_handler_info = RotatingFileHandler('../logs/EMD_Creator.log', maxBytes=1048576)
+    file_handler_info.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s || %(levelname)s || %(message)s || %(name)s')
+    file_handler_info.setFormatter(formatter)
+    logger.addHandler(file_handler_info)
+
+    return logger
+
 
 if __name__ == "__main__":
     main()
+
