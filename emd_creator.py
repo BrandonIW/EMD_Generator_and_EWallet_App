@@ -22,10 +22,9 @@ def main():
 
         print(f"Your EMD Token is: {emd_token}")
         logger.info(f"EMD Token {emd_token} || Dollar Hex {dollar_hex} || Wallet Key Hex {wallet_key_hex}")
-        sleep(2)
 
         if not _continue():
-            print("Exiting program..."); sleep(2)
+            print("Exiting program...")
             break
 
 
@@ -37,7 +36,8 @@ def _continue():
         elif response in ['y', 'yes']:
             return True
         else:
-            print("Input Yes/Y or No/N"); sleep(1)
+            print("Input Yes/Y or No/N")
+            sleep(1)
 
 
 def _create_wallet_hex_key(student_id):
@@ -49,7 +49,8 @@ def _create_emd(dollars_hex, wallet_key_hex):
     dollars_bytes = bytes.fromhex(dollars_hex)
 
     cipher = AES.new(wallet_key_bytes, AES.MODE_ECB)
-    print("Creating EMD Token..."); sleep(2)
+    print("Creating EMD Token...")
+    sleep(1)
     ciphertext = cipher.encrypt(dollars_bytes)
 
     return ciphertext.hex()
@@ -89,15 +90,6 @@ def _check_positive(num):
         return False
     return ivalue
 
-def _decrypt_emd(emd_token_hex, wallet_key_hex):
-    wallet_key_bytes = bytes.fromhex(wallet_key_hex)
-    emd_in_bytes = bytes.fromhex(emd_token_hex)
-
-    cipher = AES.new(wallet_key_bytes, AES.MODE_ECB)
-    plaintext = cipher.decrypt(emd_in_bytes)
-
-    print(f"Plaintext Bytes = {plaintext} | Plaintext Hex = {plaintext.hex()} | "
-          f"Plaintext Decimal = {int(plaintext.hex(), 16)}")
 
 def _build_logger():
     directory = os.path.dirname(os.path.abspath(__file__))
@@ -118,4 +110,3 @@ def _build_logger():
 
 if __name__ == "__main__":
     main()
-
