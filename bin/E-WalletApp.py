@@ -8,9 +8,9 @@ from Crypto.Cipher import AES
 from functools import wraps
 from time import sleep
 
-
 # TODO: Do we need a check to see if we can withdraw more than we have in the bank
 # TODO: Bug with a wallet that starts with 0s?
+
 
 def main():
     ascii_title = pyfiglet.figlet_format("E-Transfer Wallet App", font="slant")
@@ -292,8 +292,7 @@ class Wallet:
                     print("Invalid response. Type 'y', 'yes', 'n', or 'no'\n")
                     sleep(1)
 
-        print(
-            f"Wallet ID-{str(sender_id)} is already synced. Current counter is {self.synced_wallets[str(sender_id)]}\n")
+        print(f"Wallet ID-{str(sender_id)} is already synced. Current counter is {self.synced_wallets[str(sender_id)]}\n")
 
     def check_sync_wallets(self, receiver_id):
         if receiver_id not in self.synced_wallets.keys():
