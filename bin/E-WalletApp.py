@@ -8,8 +8,6 @@ from Crypto.Cipher import AES
 from functools import wraps
 from time import sleep
 
-# TODO: Do we need a check to see if we can withdraw more than we have in the bank
-
 
 def main():
     ascii_title = pyfiglet.figlet_format("E-Transfer Wallet App", font="slant")
@@ -280,7 +278,7 @@ class Wallet:
         if sender_id not in self.synced_wallets.keys():
             print("Synchronizing Wallet...")
             sleep(1)
-            self.synced_wallets[sender_id] = 1
+            self.synced_wallets[sender_id] = 0
             print(f"Added Wallet ID-{sender_id} as a Sync'd Wallet\n")
             sleep(1)
 
@@ -319,7 +317,7 @@ class Wallet:
             break
 
         counter = self.check_sync_wallets(receiver_id)
-        if not counter:
+        if counter is False:
             return
 
         dollar_amount = input(f"Input Amount to transfer (Current Balance is ${self.balance}): ")
