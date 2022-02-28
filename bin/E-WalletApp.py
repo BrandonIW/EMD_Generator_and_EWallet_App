@@ -208,7 +208,6 @@ def hex_creator(func):
             except ValueError:
                 new_args.append(arg)
         return func(*new_args, **kwargs)
-
     return wrapper
 
 
